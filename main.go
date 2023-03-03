@@ -11,11 +11,20 @@ func main() {
 	r.GET("/", func(c *gee.Context) {
 		c.HTML(http.StatusOK, "<h1>Hello World!</h1>")
 	})
-	// TODO: 这里的路由，只是静态路由，不支持/hello/:name这样的动态路由，动态路由我们将在下一次实现。
 	r.GET("/hello", func(c *gee.Context) {
 		// expect /hello?name=world
 		c.String(http.StatusOK, "hello %s, you are at %s\n", c.Query("name"), c.Path)
 	})
+	r.GET("/hello/:name", func(c *gee.Context) {
+		// expect /hello/gee
+		c.String(http.StatusOK, "hello %s, you are at %s\n", c.Param("name"), c.Path)
+	})
+
+	r.GET("/assets/*filepath", func(c *gee.Context) {
+		// expect /assets/a/b/c
+		c.JSON(http.StatusOK, gee.H{"filepath:": c.Param("filepath")})
+	})
+
 	r.POST("/login", func(c *gee.Context) {
 		c.JSON(http.StatusOK, gee.H{
 			"username": c.PostForm("username"),
