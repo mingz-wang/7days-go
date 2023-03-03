@@ -46,15 +46,15 @@ func (r *router) addRoute(method, pattern string, handler HandlerFunc) {
 	r.handlers[key] = handler
 }
 
-func (r *router) getRoute(method, path string) (*node, map[string]string) {
+func (r *router) getRoute(method, path string) (n *node, params map[string]string) {
 	searchParts := parsePattern(path)
-	params := make(map[string]string)
+	params = make(map[string]string)
 	root, ok := r.roots[method]
 	if !ok {
 		return nil, nil
 	}
 
-	n := root.search(searchParts, 0)
+	n = root.search(searchParts, 0)
 
 	if n != nil {
 		parts := parsePattern(n.pattern)
