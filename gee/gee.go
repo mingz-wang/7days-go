@@ -12,7 +12,6 @@ type HandlerFunc func(c *Context)
 type RouterGroup struct {
 	prefix      string
 	middlewares []HandlerFunc // support middleware
-	parent      *RouterGroup  // support nesting
 	engine      *Engine       // all groups share an Engine instance
 }
 
@@ -37,7 +36,6 @@ func (group *RouterGroup) Group(prefix string) *RouterGroup {
 	engine := group.engine
 	newGroup := &RouterGroup{
 		prefix: group.prefix + prefix,
-		parent: group,
 		engine: engine,
 	}
 	engine.groups = append(engine.groups, newGroup)
@@ -46,7 +44,7 @@ func (group *RouterGroup) Group(prefix string) *RouterGroup {
 
 func (group *RouterGroup) addRoute(method, comp string, handler HandlerFunc) {
 	pattern := group.prefix + comp
-	log.Printf("Route %5s - %s", method, pattern)
+	log.Printf("Route %6s - %s", method, pattern)
 	group.engine.router.addRoute(method, pattern, handler)
 }
 
