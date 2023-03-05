@@ -76,8 +76,11 @@ func (r *router) handle(c *Context) {
 	if n != nil {
 		c.Params = params // 在调用匹配到的 handler 前，将解析出来的路由参数赋值给了 c.Params
 		key := c.Method + "-" + n.pattern
-		r.handlers[key](c)
+		c.handlers = append(c.handlers, r.handlers[key])
 	} else {
-		c.String(http.StatusNotFound, "404 NOT FOUND: %s\n", c.Path)
+		c.handlers = append(c.handlers, func(c *Context) {
+			c.String(http.StatusNotFound, "404 NOT FOUND: %s\n", c.Path)
+		})
 	}
+	c.Next()
 }
