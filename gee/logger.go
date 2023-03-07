@@ -1,14 +1,12 @@
-package middlewares
+package gee
 
 import (
 	"log"
 	"time"
-
-	"gee"
 )
 
-func Logger() gee.HandlerFunc {
-	return func(c *gee.Context) {
+func Logger() HandlerFunc {
+	return func(c *Context) {
 		// Start timer
 		t := time.Now()
 		// Process request
